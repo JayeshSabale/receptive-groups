@@ -1,26 +1,26 @@
 import express from 'express'
-import dotenv from 'dotenv'
-dotenv.config()
 import cors from 'cors'
-
+import dotenv from 'dotenv'
 import connectDB from './config/db.js'
-import feedbackRoutes from './routes/feedback.routes.js'
+import newsRoutes from './routes/news.route.js'
+
+dotenv.config()
 const app = express()
-
-const port = process.env.PORT || 8000
-
 connectDB()
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+// ✅ Handle CORS from Vite (localhost:5173)
 app.use(
   cors({
-    origin: '*',
+    origin: 'http://localhost:5173', // Allow only your frontend
+    methods: ['GET', 'POST'],
+    credentials: true,
   })
 )
 
-app.use('/api/feedback', feedbackRoutes)
+app.use(express.json())
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
-})
+app.use('/api/news', newsRoutes)
+
+app.listen(process.env.PORT, () =>
+  console.log(`Server running on port ${process.env.PORT}`)
+)
